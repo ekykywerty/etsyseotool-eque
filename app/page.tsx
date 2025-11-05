@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 interface SEOAnalysis {
   optimized_title: string;
@@ -32,13 +31,13 @@ export default function Home() {
 
   const handleActivation = async () => {
     if (!activationKey.trim() || !email.trim()) {
-      alert('Пожалуйста, введите ключ активации и email');
+      alert('Please enter activation key and email');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert('Пожалуйста, введите корректный email');
+      alert('Please enter a valid email');
       return;
     }
 
@@ -62,10 +61,10 @@ export default function Home() {
         localStorage.setItem('etsy_seo_email', email);
         setScreen('main');
       } else {
-        alert(data.error || 'Ошибка активации');
+        alert(data.error || 'Activation error');
       }
     } catch (error) {
-      alert('Ошибка подключения. Попробуйте снова.');
+      alert('Connection error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -73,7 +72,7 @@ export default function Home() {
 
   const handleAnalysis = async () => {
     if (!productTitle.trim()) {
-      alert('Пожалуйста, введите название товара');
+      alert('Please enter product title');
       return;
     }
 
@@ -100,10 +99,10 @@ export default function Home() {
       if (response.ok) {
         setResults(data);
       } else {
-        alert(data.error || 'Ошибка анализа');
+        alert(data.error || 'Analysis error');
       }
     } catch (error) {
-      alert('Ошибка анализа. Попробуйте снова.');
+      alert('Analysis error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -128,20 +127,26 @@ export default function Home() {
 
   if (screen === 'activation') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 space-y-8">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="w-full max-w-md relative z-10">
+          <div className="bg-slate-900/80 backdrop-blur-2xl rounded-3xl shadow-2xl border border-purple-500/20 p-8 space-y-8">
             {/* Logo & Title */}
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg shadow-purple-500/50 animate-pulse">
                 <span className="text-4xl">🛍️</span>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
                   Etsy SEO Assistant
                 </h1>
-                <p className="text-gray-600">
-                  Оптимизируйте листинги с помощью AI
+                <p className="text-slate-400 text-lg">
+                  Optimize Your Listings with AI
                 </p>
               </div>
             </div>
@@ -149,20 +154,20 @@ export default function Home() {
             {/* Form */}
             <div className="space-y-5">
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Ключ активации
+                <label className="block text-sm font-semibold text-slate-300">
+                  Activation Key
                 </label>
                 <input
                   type="text"
                   value={activationKey}
                   onChange={(e) => setActivationKey(e.target.value)}
-                  placeholder="Введите ваш ключ"
-                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 placeholder-gray-400 outline-none"
+                  placeholder="Enter your key"
+                  className="w-full px-4 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-slate-500 outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">
+                <label className="block text-sm font-semibold text-slate-300">
                   Email
                 </label>
                 <input
@@ -170,14 +175,14 @@ export default function Home() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 placeholder-gray-400 outline-none"
+                  className="w-full px-4 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-slate-500 outline-none transition-all"
                 />
               </div>
 
               <button
                 onClick={handleActivation}
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+                className="w-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 focus:ring-4 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -185,18 +190,18 @@ export default function Home() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Активация...
+                    Activating...
                   </span>
                 ) : (
-                  'Активировать'
+                  'Activate Account'
                 )}
               </button>
             </div>
 
             {/* Footer */}
-            <div className="pt-6 border-t border-gray-200">
-              <p className="text-center text-sm text-gray-600">
-                Нет ключа? <a href="/get-key" className="text-indigo-600 font-semibold hover:text-indigo-700">Получить бесплатно</a>
+            <div className="pt-6 border-t border-slate-800">
+              <p className="text-center text-sm text-slate-400">
+                Don't have a key? <a href="/get-key" className="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">Get Free Access</a>
               </p>
             </div>
           </div>
@@ -206,25 +211,25 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-sm">
+      <header className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-2xl border-b border-slate-800 shadow-lg">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-lg shadow-lg shadow-purple-500/30">
                 <span className="text-2xl">🛍️</span>
               </div>
               <div>
-                <h1 className="text-lg font-bold text-gray-900">Etsy SEO Assistant</h1>
-                <p className="text-xs text-gray-600">AI-оптимизация листингов</p>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Etsy SEO Assistant</h1>
+                <p className="text-xs text-slate-400">AI-Powered Listing Optimization</p>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium text-sm transition-colors"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-medium text-sm transition-all border border-slate-700"
             >
-              Выход
+              Sign Out
             </button>
           </div>
         </div>
@@ -233,38 +238,38 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Input Card */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-8">
+        <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800 p-6 sm:p-8">
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="block text-base font-semibold text-gray-900">
-                Название товара
+              <label className="block text-base font-semibold text-slate-200">
+                Product Title
               </label>
               <textarea
                 value={productTitle}
                 onChange={(e) => setProductTitle(e.target.value)}
-                placeholder="Введите текущее название вашего товара..."
+                placeholder="Enter your current product title..."
                 rows={3}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 placeholder-gray-400 resize-none outline-none"
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-slate-500 resize-none outline-none transition-all"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-base font-semibold text-gray-900">
-                Описание товара <span className="text-gray-500 font-normal text-sm">(опционально)</span>
+              <label className="block text-base font-semibold text-slate-200">
+                Product Description <span className="text-slate-500 font-normal text-sm">(optional)</span>
               </label>
               <textarea
                 value={productDescription}
                 onChange={(e) => setProductDescription(e.target.value)}
-                placeholder="Кратко опишите ваш товар для лучшей оптимизации..."
+                placeholder="Briefly describe your product for better optimization..."
                 rows={4}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 placeholder-gray-400 resize-none outline-none"
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-slate-500 resize-none outline-none transition-all"
               />
             </div>
 
             <button
               onClick={handleAnalysis}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+              className="w-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 focus:ring-4 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -272,10 +277,10 @@ export default function Home() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Анализируем...
+                  Analyzing...
                 </span>
               ) : (
-                '✨ Оптимизировать листинг'
+                '✨ Optimize Listing'
               )}
             </button>
           </div>
@@ -285,63 +290,63 @@ export default function Home() {
         {results && (
           <div className="space-y-6">
             {/* Optimized Title */}
-            <div className="bg-white rounded-2xl shadow-lg border border-emerald-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4">
+            <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl border border-emerald-500/30 overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 px-6 py-4 border-b border-emerald-500/30">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-emerald-400 flex items-center gap-2">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
-                    Оптимизированное название
+                    Optimized Title
                   </h3>
                   <button
                     onClick={() => copyToClipboard(results.optimized_title, 'title')}
-                    className="px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-white font-medium text-sm transition-colors"
+                    className="px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 backdrop-blur-sm rounded-lg text-emerald-400 font-medium text-sm transition-all border border-emerald-500/30"
                   >
-                    {copied === 'title' ? '✓ Скопировано' : 'Копировать'}
+                    {copied === 'title' ? '✓ Copied' : 'Copy'}
                   </button>
                 </div>
               </div>
               <div className="p-6 space-y-4">
-                <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
-                  <p className="text-gray-900 text-base leading-relaxed">{results.optimized_title}</p>
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <p className="text-slate-200 text-base leading-relaxed">{results.optimized_title}</p>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-600 font-medium">
-                    {results.character_count} символов
+                  <span className="text-slate-400 font-medium">
+                    {results.character_count} characters
                   </span>
                   {results.character_count >= 60 && results.character_count <= 140 ? (
-                    <span className="text-emerald-600 font-semibold flex items-center gap-1">
+                    <span className="text-emerald-400 font-semibold flex items-center gap-1">
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      Оптимальная длина
+                      Optimal Length
                     </span>
                   ) : (
-                    <span className="text-amber-600 font-semibold">⚠ Рекомендуем скорректировать</span>
+                    <span className="text-amber-400 font-semibold">⚠ Consider Adjusting</span>
                   )}
                 </div>
-                <p className="text-gray-600 text-sm">
-                  💡 <strong>Совет:</strong> Названия на Etsy лучше всего работают в диапазоне 60-140 символов
+                <p className="text-slate-400 text-sm">
+                  💡 <strong className="text-slate-300">Tip:</strong> Etsy titles work best between 60-140 characters
                 </p>
               </div>
             </div>
 
             {/* Tags */}
-            <div className="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-6 py-4">
+            <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl border border-cyan-500/30 overflow-hidden">
+              <div className="bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-cyan-500/20 px-6 py-4 border-b border-cyan-500/30">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-cyan-400 flex items-center gap-2">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                     </svg>
-                    Рекомендованные теги
+                    Recommended Tags
                   </h3>
                   <button
                     onClick={() => copyToClipboard(results.tags.join(', '), 'tags')}
-                    className="px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-white font-medium text-sm transition-colors"
+                    className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 backdrop-blur-sm rounded-lg text-cyan-400 font-medium text-sm transition-all border border-cyan-500/30"
                   >
-                    {copied === 'tags' ? '✓ Скопировано' : 'Копировать все'}
+                    {copied === 'tags' ? '✓ Copied' : 'Copy All'}
                   </button>
                 </div>
               </div>
@@ -350,36 +355,36 @@ export default function Home() {
                   {results.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium border border-blue-200 hover:bg-blue-100 transition-colors"
+                      className="inline-flex items-center px-4 py-2 bg-cyan-500/10 text-cyan-400 rounded-lg text-sm font-medium border border-cyan-500/30 hover:bg-cyan-500/20 transition-all"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <p className="text-gray-600 text-sm">
-                  💡 <strong>Совет:</strong> Используйте все 13 тегов для максимальной видимости
+                <p className="text-slate-400 text-sm">
+                  💡 <strong className="text-slate-300">Tip:</strong> Use all 13 tags for maximum visibility
                 </p>
               </div>
             </div>
 
             {/* Description Tips */}
-            <div className="bg-white rounded-2xl shadow-lg border border-purple-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl border border-purple-500/30 overflow-hidden">
+              <div className="bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 px-6 py-4 border-b border-purple-500/30">
+                <h3 className="text-lg font-bold text-purple-400 flex items-center gap-2">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
                   </svg>
-                  Улучшения для описания
+                  Description Improvements
                 </h3>
               </div>
               <div className="p-6">
                 <div className="space-y-3">
                   {results.description_improvements.map((tip, index) => (
-                    <div key={index} className="flex items-start gap-3 bg-purple-50 rounded-lg p-4 border border-purple-100">
-                      <div className="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                    <div key={index} className="flex items-start gap-3 bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                      <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}
                       </div>
-                      <span className="text-gray-700 text-sm leading-relaxed flex-1">{tip}</span>
+                      <span className="text-slate-300 text-sm leading-relaxed flex-1">{tip}</span>
                     </div>
                   ))}
                 </div>
@@ -387,15 +392,15 @@ export default function Home() {
             </div>
 
             {/* Success Banner */}
-            <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-6 text-center shadow-lg">
+            <div className="bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 rounded-2xl p-6 text-center border border-emerald-500/30 backdrop-blur-xl">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <h3 className="text-xl font-bold text-white">Оптимизация завершена!</h3>
+                <h3 className="text-xl font-bold text-emerald-400">Optimization Complete!</h3>
               </div>
-              <p className="text-white/90 text-sm">
-                Скопируйте оптимизированный контент в ваш листинг Etsy для увеличения видимости
+              <p className="text-slate-300 text-sm">
+                Copy the optimized content to your Etsy listing to boost visibility
               </p>
             </div>
           </div>
@@ -403,13 +408,13 @@ export default function Home() {
 
         {/* Empty State */}
         {!results && (
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl mb-6">
+          <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800 p-12 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-2xl mb-6 border border-purple-500/30">
               <span className="text-5xl">🚀</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">Готовы оптимизировать?</h3>
-            <p className="text-gray-600 max-w-md mx-auto">
-              Введите информацию о вашем товаре выше, чтобы получить AI-рекомендации по оптимизации
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">Ready to Optimize?</h3>
+            <p className="text-slate-400 max-w-md mx-auto">
+              Enter your product information above to get AI-powered optimization recommendations
             </p>
           </div>
         )}
