@@ -146,7 +146,7 @@ export default function Home() {
                   Etsy SEO Assistant
                 </h1>
                 <p className="text-slate-400 text-lg">
-                  Optimize Your Listings with AI
+                  Optimize Your Listings
                 </p>
               </div>
             </div>
@@ -197,13 +197,6 @@ export default function Home() {
                 )}
               </button>
             </div>
-
-            {/* Footer */}
-            <div className="pt-6 border-t border-slate-800">
-              <p className="text-center text-sm text-slate-400">
-                Don't have a key? <a href="/get-key" className="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors">Get Free Access</a>
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -222,7 +215,7 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Etsy SEO Assistant</h1>
-                <p className="text-xs text-slate-400">AI-Powered Listing Optimization</p>
+                <p className="text-xs text-slate-400">Powered Listing Optimization</p>
               </div>
             </div>
             <button
