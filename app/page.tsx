@@ -218,12 +218,6 @@ export default function Home() {
                 <p className="text-xs text-slate-400">Powered Listing Optimization</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-medium text-sm transition-all border border-slate-700"
-            >
-              Sign Out
-            </button>
           </div>
         </div>
       </header>
