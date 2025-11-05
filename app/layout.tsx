@@ -2,8 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Etsy SEO Assistant - Optimize Your Listings',
-  description: 'AI-powered SEO optimization tool for Etsy sellers',
+  title: 'Etsy SEO Assistant - AI-Powered Listing Optimization',
+  description: 'Optimize your Etsy listings with AI-powered SEO recommendations. Get better titles, tags, and descriptions to boost your shop\'s visibility.',
 };
 
 export default function RootLayout({
