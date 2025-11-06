@@ -1,6 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+
+const [activationKey, setActivationKey] = useState("");
+const [email, setEmail] = useState("");
+const [isActivated, setIsActivated] = useState(false);
+const [error, setError] = useState("");
+const [expiresAt, setExpiresAt] = useState<string | null>(null);
 
 interface SEOAnalysis {
   optimized_title: string;
@@ -8,6 +14,7 @@ interface SEOAnalysis {
   tags: string[];
   description_improvements: string[];
 }
+
 
 export default function Home() {
   const [screen, setScreen] = useState<'activation' | 'main'>('activation');
@@ -19,56 +26,68 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
-  useEffect(() => {
-    const savedKey = localStorage.getItem('etsy_seo_activation_key');
-    const savedEmail = localStorage.getItem('etsy_seo_email');
-    if (savedKey && savedEmail) {
-      setActivationKey(savedKey);
-      setEmail(savedEmail);
-      setScreen('main');
-    }
-  }, []);
+  
+useEffect(() => {
+  const checkSubscription = () => {
+  const exp = localStorage.getItem("expiresAt");
+  if (!exp) return false;
+
+  const now = new Date();
+  const expires = new Date(exp);
+
+  return expires > now;
+};
+  const savedKey = localStorage.getItem("etsy_seo_activation_key");
+  const savedEmail = localStorage.getItem("etsy_seo_email");
+
+  if (savedKey && savedEmail && checkSubscription()) {
+    setActivationKey(savedKey);
+    setEmail(savedEmail);
+    setScreen("main"); // показываем основной экран
+  } else {
+    setScreen("activation"); // показываем экран активации
+    localStorage.removeItem("etsy_seo_activation_key");
+    localStorage.removeItem("etsy_seo_email");
+    localStorage.removeItem("expiresAt");
+  }
+}, []);
 
   const handleActivation = async () => {
-    if (!activationKey.trim() || !email.trim()) {
-      alert('Please enter activation key and email');
+  setError(""); // очищаем ошибку
+
+  if (!activationKey.trim() || !email.trim()) {
+    setError("Введите ключ и email");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/check-key", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ activationKey, email }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.valid) {
+      setError(data.error || "Ошибка активации");
+      setIsActivated(false);
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email');
-      return;
-    }
+    // сохраняем в localStorage, чтобы не спрашивать заново
+    localStorage.setItem("etsy_seo_activation_key", activationKey);
+    localStorage.setItem("etsy_seo_email", email);
+    if (data.expires_at) localStorage.setItem("expiresAt", data.expires_at);
 
-    setLoading(true);
-    try {
-      const response = await fetch('/api/check-key', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          activationKey: activationKey,
-          email: email
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.valid) {
-        localStorage.setItem('etsy_seo_activation_key', activationKey);
-        localStorage.setItem('etsy_seo_email', email);
-        setScreen('main');
-      } else {
-        alert(data.error || 'Activation error');
-      }
-    } catch (error) {
-      alert('Connection error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    setIsActivated(true);
+    setExpiresAt(data.expires_at || null);
+    setScreen("main"); // переключаем экран
+  } catch (err) {
+    console.error("Ошибка при активации:", err);
+    setError("Ошибка сервера");
+  }
+};
 
   const handleAnalysis = async () => {
     if (!productTitle.trim()) {
