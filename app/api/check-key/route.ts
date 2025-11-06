@@ -36,17 +36,19 @@ export async function POST(request: Request) {
 
     // Если ключ не активирован — активируем
     if (!key.email) {
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 30);
+     const now = new Date();
+     const expiresAt = new Date();
+     expiresAt.setDate(expiresAt.getDate() + 30);
 
       await sql`
-        UPDATE activation_keys
-        SET email = ${email},
-            status = 'active',
-            activated_at = ${now.toISOString()},
-            expires_at = ${expiresAt.toISOString()}
-        WHERE activation_key = ${activationKey};
-      `;
+     UPDATE activation_keys
+     SET 
+     status = 'active',
+     email = ${email},
+      activated_at = ${now.toISOString()},
+      expires_at = ${expiresAt.toISOString()}
+  WHERE activation_key = ${activationKey};
+`;
 
       return NextResponse.json({
         valid: true,
