@@ -1,57 +1,44 @@
-import { sql } from "@vercel/postgres";
-import { NextResponse } from "next/server";
+import { sql } from '@vercel/postgres';
+import { NextResponse } from 'next/server';
+
+interface SEOAnalysis {
+  optimized_title: string;
+  character_count: number;
+  tags: string[];
+  description_improvements: string[];
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { activation_key, email } = body;
+    const { productTitle, productDescription, activationKey, email } = body;
 
-    if (!activation_key || !email) {
-      return NextResponse.json({ error: "Key and email are required" }, { status: 400 });
+    if (!activationKey || !email) {
+      return NextResponse.json({ error: "Activation key required" }, { status: 400 });
     }
 
-    // Проверяем наличие ключа в базе
-    const result = await sql`
+    // Проверка ключа перед анализом
+    const keyCheck = await sql`
       SELECT * FROM activation_keys
-      WHERE activation_key = ${activation_key};
+      WHERE activation_key = ${activationKey} AND email = ${email} AND status = 'active';
     `;
-
-    if (result.rows.length === 0) {
-      return NextResponse.json({ error: "Invalid activation key" }, { status: 400 });
+    if (keyCheck.rows.length === 0) {
+      return NextResponse.json({ error: "Invalid or inactive key" }, { status: 403 });
     }
 
-    const keyData = result.rows[0];
+    // ТУТ вставляешь вызов своей нейросети или генерацию SEO
+    // Для примера возвращаем заглушку
+    const analysis: SEOAnalysis = {
+      optimized_title: productTitle + " | Optimized",
+      character_count: productTitle.length,
+      tags: ["tag1", "tag2", "tag3"],
+      description_improvements: ["Use more keywords", "Make description concise"],
+    };
 
-    if (keyData.status === "active") {
-      return NextResponse.json({ error: "This key is already activated" }, { status: 400 });
-    }
+    return NextResponse.json(analysis);
 
-    // Устанавливаем дату активации и истечения (через 30 дней)
-    const now = new Date();
-    const expiresAt = new Date(now);
-    expiresAt.setDate(expiresAt.getDate() + 30);
-
-    // Обновляем данные ключа
-    await sql`
-      UPDATE activation_keys
-      SET 
-        status = 'active',
-        email = ${email},
-        activated_at = ${now.toISOString()},
-        expires_at = ${expiresAt.toISOString()}
-      WHERE activation_key = ${activation_key};
-    `;
-
-    return NextResponse.json({
-      success: true,
-      message: "Key activated successfully",
-      expires_at: expiresAt.toISOString(),
-    });
   } catch (error) {
-    console.error("Activation error:", error);
-    return NextResponse.json(
-      { error: "Internal server error", details: 'error.message' },
-      { status: 500 }
-    );
+    console.error('Analyze error:', error);
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }
