@@ -211,10 +211,9 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Etsy SEO Assistant</h1>
-                <p className="text-xs text-slate-400">Powered Listing Optimization</p>
+                <p className="text-xs text-slate-400">Seo Listing Optimization</p>
               </div>
             </div>
-            <button onClick={handleLogout} className="text-red-400 hover:text-red-500 font-semibold text-sm">Logout</button>
           </div>
         </div>
       </header>
